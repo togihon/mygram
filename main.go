@@ -1,9 +1,12 @@
 package main
 
-import "mygram/app/handler"
+import (
+	"mygram/app/handler"
+	"os"
+)
 
 func main() {
-	var PORT = ":8080"
+	var PORT = os.Getenv("PORT")
 
-	handler.StartServer().Run(PORT)
+	handler.StartServer().Run(":" + PORT)
 }
