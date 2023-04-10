@@ -11,7 +11,7 @@ import (
 
 var (
 	host     = os.Getenv("PGHOST")
-	port     = os.Getenv("PGPORT")
+	port     = 5432
 	user     = os.Getenv("PGUSER")
 	password = os.Getenv("PGPASSWORD")
 	dbname   = os.Getenv("PGDATABASE")
