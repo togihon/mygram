@@ -3,17 +3,18 @@ package database
 import (
 	"fmt"
 	"mygram/app/entity"
-
+	"os"
+	
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
 var (
-	host     = "containers-us-west-58.railway.app"
-	port     = 7201
-	user     = "postgres"
-	password = "FuYn3OLoNN1467ER6q7B"
-	dbname   = "railway"
+	host     = os.Getenv("PGHOST")
+	port     = os.Getenv("PGPORT")
+	user     = os.Getenv("PGUSER")
+	password = os.Getenv("PGPASSWORD")
+	dbname   = os.Getenv("PGDATABASE")
 	db       *gorm.DB
 	err      error
 )
