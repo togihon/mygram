@@ -31,7 +31,7 @@ import (
 // @name Authorization
 // @description Type "Bearer" followed by a space and JWT token.
 
-// @host localhost:8080
+// @host https://mygram-production-2f89.up.railway.app/
 // @BasePath /
 // @swagg.NoModels
 
