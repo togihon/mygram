@@ -67,7 +67,7 @@ definitions:
         example: true
         type: boolean
     type: object
-host: https://mygram-production-2f89.up.railway.app/
+host: https://mygram-production-2f89.up.railway.app
 info:
   contact:
     email: togi.mare@gmail.com
