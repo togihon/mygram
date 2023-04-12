@@ -23,7 +23,7 @@ import (
 func MyGramGetAllPhoto(c *gin.Context) {
 	db, _ := database.Connect()
 	Photo := []entity.MyGramPhoto{}
-	err := db.Find(&Photo).Error
+	err := db.Order("created_at desc").Find(&Photo).Error
 
 	if err != nil {
 		c.JSON(http.StatusNotFound, entity.ResponseFailed{
