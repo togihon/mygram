@@ -10,64 +10,7 @@ definitions:
         example: true
         type: boolean
     type: object
-  entity.ResponseFailed:
-    properties:
-      message:
-        example: success
-        type: string
-      success:
-        example: true
-        type: boolean
-    type: object
-  entity.ResponseLogin:
-    properties:
-      data:
-        properties:
-          token:
-            example: eyJhbGciOiJI....
-            type: string
-        type: object
-      message:
-        example: success
-        type: string
-      success:
-        example: true
-        type: boolean
-    type: object
-  entity.ResponseRegister:
-    properties:
-      data:
-        properties:
-          age:
-            example: 18
-            type: integer
-          email:
-            example: user@mail.com
-            type: string
-          id:
-            example: 1
-            type: integer
-          username:
-            example: user
-            type: string
-        type: object
-      message:
-        example: success
-        type: string
-      success:
-        example: true
-        type: boolean
-    type: object
-  entity.ResponseSuccess:
-    properties:
-      message:
-        example: success
-        type: string
-      success:
-        example: true
-        type: boolean
-    type: object
-host: mygram-production-2f89.up.railway.app
+host: localhost:8080
 info:
   contact:
     email: togi.mare@gmail.com
@@ -95,8 +38,43 @@ paths:
         "404":
           description: If there is no comment, error will appear
           schema:
-            $ref: '#/definitions/entity.ResponseFailed'
+            $ref: '#/definitions/entity.Response'
       summary: Get all comments
+      tags:
+      - comments
+  /comments/:
+    post:
+      description: User can create a comment.
+      parameters:
+      - description: photo id
+        in: formData
+        name: photo_id
+        required: true
+        type: integer
+      - description: your comment
+        in: formData
+        name: message
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: If all of the parameters filled and you're login
+          schema:
+            $ref: '#/definitions/entity.Response'
+        "401":
+          description: If you are not login or some parameters not filled, error will
+            appear
+          schema:
+            $ref: '#/definitions/entity.Response'
+        "404":
+          description: If photo id's not found
+          schema:
+            $ref: '#/definitions/entity.Response'
+      security:
+      - Bearer: []
+      summary: Create a comment
       tags:
       - comments
   /comments/{id}:
@@ -114,12 +92,12 @@ paths:
         "200":
           description: If comment is exist and it's your own comment
           schema:
-            $ref: '#/definitions/entity.ResponseSuccess'
+            $ref: '#/definitions/entity.Response'
         "400":
           description: If the comment's id is not your own and if the comment doesn't
             exist, error will appear
           schema:
-            $ref: '#/definitions/entity.ResponseFailed'
+            $ref: '#/definitions/entity.Response'
       security:
       - Bearer: []
       summary: Delete a comment
@@ -144,7 +122,7 @@ paths:
           description: If the comments's id doesn't match with the parameter, error
             will appear
           schema:
-            $ref: '#/definitions/entity.ResponseFailed'
+            $ref: '#/definitions/entity.Response'
       summary: Get one comment
       tags:
       - comments
@@ -171,45 +149,10 @@ paths:
         "404":
           description: If there is something wrong, error will appear
           schema:
-            $ref: '#/definitions/entity.ResponseFailed'
+            $ref: '#/definitions/entity.Response'
       security:
       - Bearer: []
       summary: Edit a comment
-      tags:
-      - comments
-  /comments/{photoID}:
-    post:
-      description: User can create a comment.
-      parameters:
-      - description: photo id
-        in: path
-        name: photoID
-        required: true
-        type: integer
-      - description: your comment
-        in: formData
-        name: message
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: If all of the parameters filled and you're login
-          schema:
-            $ref: '#/definitions/entity.Response'
-        "401":
-          description: If you are not login or some parameters not filled, error will
-            appear
-          schema:
-            $ref: '#/definitions/entity.ResponseFailed'
-        "404":
-          description: If photo id's not found
-          schema:
-            $ref: '#/definitions/entity.ResponseFailed'
-      security:
-      - Bearer: []
-      summary: Create a comment
       tags:
       - comments
   /photos:
@@ -223,9 +166,9 @@ paths:
           schema:
             $ref: '#/definitions/entity.Response'
         "404":
-          description: If there is no photo, error will appear
+          description: If there is no photo, data will set to nil
           schema:
-            $ref: '#/definitions/entity.ResponseFailed'
+            $ref: '#/definitions/entity.Response'
       summary: Get all photos
       tags:
       - photos
@@ -258,7 +201,7 @@ paths:
           description: If you are not login or some parameters not filled, error will
             appear
           schema:
-            $ref: '#/definitions/entity.ResponseFailed'
+            $ref: '#/definitions/entity.Response'
       security:
       - Bearer: []
       summary: Upload a photo
@@ -277,14 +220,14 @@ paths:
       - application/json
       responses:
         "200":
-          description: If photo is exist and it's your own photo
+          description: If photo is exist and it's your own photo, photo will deleted
           schema:
             $ref: '#/definitions/entity.Response'
         "400":
           description: If the photo is not your own or if the photo doesn't exist,
             error will appear
           schema:
-            $ref: '#/definitions/entity.ResponseFailed'
+            $ref: '#/definitions/entity.Response'
       security:
       - Bearer: []
       summary: Delete a photo
@@ -309,7 +252,7 @@ paths:
           description: If the photo's id doesn't match with the parameter, error will
             appear
           schema:
-            $ref: '#/definitions/entity.ResponseFailed'
+            $ref: '#/definitions/entity.Response'
       summary: Get one photo
       tags:
       - photos
@@ -346,7 +289,7 @@ paths:
         "401":
           description: If there is something wrong, error will appear
           schema:
-            $ref: '#/definitions/entity.ResponseFailed'
+            $ref: '#/definitions/entity.Response'
       security:
       - Bearer: []
       summary: Edit a photo
@@ -365,7 +308,7 @@ paths:
         "404":
           description: If there is no social media, error will appear
           schema:
-            $ref: '#/definitions/entity.ResponseFailed'
+            $ref: '#/definitions/entity.Response'
       summary: Get all social media
       tags:
       - social-medias
@@ -393,7 +336,7 @@ paths:
           description: If you are not login or some parameters not filled, error will
             appear
           schema:
-            $ref: '#/definitions/entity.ResponseFailed'
+            $ref: '#/definitions/entity.Response'
       security:
       - Bearer: []
       summary: Create a social media
@@ -414,12 +357,12 @@ paths:
         "200":
           description: If social media is exist and it's your own social media
           schema:
-            $ref: '#/definitions/entity.ResponseSuccess'
+            $ref: '#/definitions/entity.Response'
         "400":
           description: If social media's id is not your own or if the comment doesn't
             exist, error will appear
           schema:
-            $ref: '#/definitions/entity.ResponseFailed'
+            $ref: '#/definitions/entity.Response'
       security:
       - Bearer: []
       summary: Delete a social media
@@ -444,7 +387,7 @@ paths:
           description: If the social media's id doesn't match with the parameter,
             error will appear
           schema:
-            $ref: '#/definitions/entity.ResponseFailed'
+            $ref: '#/definitions/entity.Response'
       summary: Get one social media
       tags:
       - social-medias
@@ -476,7 +419,7 @@ paths:
         "400":
           description: If there is something wrong, error will appear
           schema:
-            $ref: '#/definitions/entity.ResponseFailed'
+            $ref: '#/definitions/entity.Response'
       security:
       - Bearer: []
       summary: Edit a social media
@@ -500,13 +443,13 @@ paths:
       - application/json
       responses:
         "200":
-          description: Jika email dan password benar, maka akan mendapatkan token
+          description: If email and password are correct, you will get a token
           schema:
-            $ref: '#/definitions/entity.ResponseLogin'
+            $ref: '#/definitions/entity.Response'
         "401":
-          description: Jika email dan password salah, maka akan muncul error
+          description: If email and password are not correct, data will set to nil
           schema:
-            $ref: '#/definitions/entity.ResponseFailed'
+            $ref: '#/definitions/entity.Response'
       summary: User Login
       tags:
       - users
@@ -538,13 +481,13 @@ paths:
       - application/json
       responses:
         "201":
-          description: 'Jika semua field benar, maka akun akan dibuat '
+          description: 'If all field filled and correct, account will created '
           schema:
-            $ref: '#/definitions/entity.ResponseRegister'
+            $ref: '#/definitions/entity.Response'
         "400":
-          description: Jika terdapat kesalahan akan muncul error
+          description: If there is an error, data will set to nil
           schema:
-            $ref: '#/definitions/entity.ResponseFailed'
+            $ref: '#/definitions/entity.Response'
       summary: User Register
       tags:
       - users

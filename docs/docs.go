@@ -44,7 +44,60 @@ const docTemplate = `{
                     "404": {
                         "description": "If there is no comment, error will appear",
                         "schema": {
-                            "$ref": "#/definitions/entity.ResponseFailed"
+                            "$ref": "#/definitions/entity.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/comments/": {
+            "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "User can create a comment.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "comments"
+                ],
+                "summary": "Create a comment",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "photo id",
+                        "name": "photo_id",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "your comment",
+                        "name": "message",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "If all of the parameters filled and you're login",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "If you are not login or some parameters not filled, error will appear",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "If photo id's not found",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Response"
                         }
                     }
                 }
@@ -79,7 +132,7 @@ const docTemplate = `{
                     "404": {
                         "description": "If the comments's id doesn't match with the parameter, error will appear",
                         "schema": {
-                            "$ref": "#/definitions/entity.ResponseFailed"
+                            "$ref": "#/definitions/entity.Response"
                         }
                     }
                 }
@@ -124,7 +177,7 @@ const docTemplate = `{
                     "404": {
                         "description": "If there is something wrong, error will appear",
                         "schema": {
-                            "$ref": "#/definitions/entity.ResponseFailed"
+                            "$ref": "#/definitions/entity.Response"
                         }
                     }
                 }
@@ -156,66 +209,13 @@ const docTemplate = `{
                     "200": {
                         "description": "If comment is exist and it's your own comment",
                         "schema": {
-                            "$ref": "#/definitions/entity.ResponseSuccess"
+                            "$ref": "#/definitions/entity.Response"
                         }
                     },
                     "400": {
                         "description": "If the comment's id is not your own and if the comment doesn't exist, error will appear",
                         "schema": {
-                            "$ref": "#/definitions/entity.ResponseFailed"
-                        }
-                    }
-                }
-            }
-        },
-        "/comments/{photoID}": {
-            "post": {
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "description": "User can create a comment.",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "comments"
-                ],
-                "summary": "Create a comment",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "photo id",
-                        "name": "photoID",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "your comment",
-                        "name": "message",
-                        "in": "formData",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "If all of the parameters filled and you're login",
-                        "schema": {
                             "$ref": "#/definitions/entity.Response"
-                        }
-                    },
-                    "401": {
-                        "description": "If you are not login or some parameters not filled, error will appear",
-                        "schema": {
-                            "$ref": "#/definitions/entity.ResponseFailed"
-                        }
-                    },
-                    "404": {
-                        "description": "If photo id's not found",
-                        "schema": {
-                            "$ref": "#/definitions/entity.ResponseFailed"
                         }
                     }
                 }
@@ -239,9 +239,9 @@ const docTemplate = `{
                         }
                     },
                     "404": {
-                        "description": "If there is no photo, error will appear",
+                        "description": "If there is no photo, data will set to nil",
                         "schema": {
-                            "$ref": "#/definitions/entity.ResponseFailed"
+                            "$ref": "#/definitions/entity.Response"
                         }
                     }
                 }
@@ -293,7 +293,7 @@ const docTemplate = `{
                     "404": {
                         "description": "If you are not login or some parameters not filled, error will appear",
                         "schema": {
-                            "$ref": "#/definitions/entity.ResponseFailed"
+                            "$ref": "#/definitions/entity.Response"
                         }
                     }
                 }
@@ -328,7 +328,7 @@ const docTemplate = `{
                     "404": {
                         "description": "If the photo's id doesn't match with the parameter, error will appear",
                         "schema": {
-                            "$ref": "#/definitions/entity.ResponseFailed"
+                            "$ref": "#/definitions/entity.Response"
                         }
                     }
                 }
@@ -387,7 +387,7 @@ const docTemplate = `{
                     "401": {
                         "description": "If there is something wrong, error will appear",
                         "schema": {
-                            "$ref": "#/definitions/entity.ResponseFailed"
+                            "$ref": "#/definitions/entity.Response"
                         }
                     }
                 }
@@ -417,7 +417,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "If photo is exist and it's your own photo",
+                        "description": "If photo is exist and it's your own photo, photo will deleted",
                         "schema": {
                             "$ref": "#/definitions/entity.Response"
                         }
@@ -425,7 +425,7 @@ const docTemplate = `{
                     "400": {
                         "description": "If the photo is not your own or if the photo doesn't exist, error will appear",
                         "schema": {
-                            "$ref": "#/definitions/entity.ResponseFailed"
+                            "$ref": "#/definitions/entity.Response"
                         }
                     }
                 }
@@ -451,7 +451,7 @@ const docTemplate = `{
                     "404": {
                         "description": "If there is no social media, error will appear",
                         "schema": {
-                            "$ref": "#/definitions/entity.ResponseFailed"
+                            "$ref": "#/definitions/entity.Response"
                         }
                     }
                 }
@@ -496,7 +496,7 @@ const docTemplate = `{
                     "401": {
                         "description": "If you are not login or some parameters not filled, error will appear",
                         "schema": {
-                            "$ref": "#/definitions/entity.ResponseFailed"
+                            "$ref": "#/definitions/entity.Response"
                         }
                     }
                 }
@@ -531,7 +531,7 @@ const docTemplate = `{
                     "404": {
                         "description": "If the social media's id doesn't match with the parameter, error will appear",
                         "schema": {
-                            "$ref": "#/definitions/entity.ResponseFailed"
+                            "$ref": "#/definitions/entity.Response"
                         }
                     }
                 }
@@ -583,7 +583,7 @@ const docTemplate = `{
                     "400": {
                         "description": "If there is something wrong, error will appear",
                         "schema": {
-                            "$ref": "#/definitions/entity.ResponseFailed"
+                            "$ref": "#/definitions/entity.Response"
                         }
                     }
                 }
@@ -615,13 +615,13 @@ const docTemplate = `{
                     "200": {
                         "description": "If social media is exist and it's your own social media",
                         "schema": {
-                            "$ref": "#/definitions/entity.ResponseSuccess"
+                            "$ref": "#/definitions/entity.Response"
                         }
                     },
                     "400": {
                         "description": "If social media's id is not your own or if the comment doesn't exist, error will appear",
                         "schema": {
-                            "$ref": "#/definitions/entity.ResponseFailed"
+                            "$ref": "#/definitions/entity.Response"
                         }
                     }
                 }
@@ -655,15 +655,15 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "Jika email dan password benar, maka akan mendapatkan token",
+                        "description": "If email and password are correct, you will get a token",
                         "schema": {
-                            "$ref": "#/definitions/entity.ResponseLogin"
+                            "$ref": "#/definitions/entity.Response"
                         }
                     },
                     "401": {
-                        "description": "Jika email dan password salah, maka akan muncul error",
+                        "description": "If email and password are not correct, data will set to nil",
                         "schema": {
-                            "$ref": "#/definitions/entity.ResponseFailed"
+                            "$ref": "#/definitions/entity.Response"
                         }
                     }
                 }
@@ -711,15 +711,15 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "201": {
-                        "description": "Jika semua field benar, maka akun akan dibuat ",
+                        "description": "If all field filled and correct, account will created ",
                         "schema": {
-                            "$ref": "#/definitions/entity.ResponseRegister"
+                            "$ref": "#/definitions/entity.Response"
                         }
                     },
                     "400": {
-                        "description": "Jika terdapat kesalahan akan muncul error",
+                        "description": "If there is an error, data will set to nil",
                         "schema": {
-                            "$ref": "#/definitions/entity.ResponseFailed"
+                            "$ref": "#/definitions/entity.Response"
                         }
                     }
                 }
@@ -734,88 +734,6 @@ const docTemplate = `{
                 "message": {
                     "type": "string",
                     "example": "created"
-                },
-                "success": {
-                    "type": "boolean",
-                    "example": true
-                }
-            }
-        },
-        "entity.ResponseFailed": {
-            "type": "object",
-            "properties": {
-                "message": {
-                    "type": "string",
-                    "example": "success"
-                },
-                "success": {
-                    "type": "boolean",
-                    "example": true
-                }
-            }
-        },
-        "entity.ResponseLogin": {
-            "type": "object",
-            "properties": {
-                "data": {
-                    "type": "object",
-                    "properties": {
-                        "token": {
-                            "type": "string",
-                            "example": "eyJhbGciOiJI...."
-                        }
-                    }
-                },
-                "message": {
-                    "type": "string",
-                    "example": "success"
-                },
-                "success": {
-                    "type": "boolean",
-                    "example": true
-                }
-            }
-        },
-        "entity.ResponseRegister": {
-            "type": "object",
-            "properties": {
-                "data": {
-                    "type": "object",
-                    "properties": {
-                        "age": {
-                            "type": "integer",
-                            "example": 18
-                        },
-                        "email": {
-                            "type": "string",
-                            "example": "user@mail.com"
-                        },
-                        "id": {
-                            "type": "integer",
-                            "example": 1
-                        },
-                        "username": {
-                            "type": "string",
-                            "example": "user"
-                        }
-                    }
-                },
-                "message": {
-                    "type": "string",
-                    "example": "success"
-                },
-                "success": {
-                    "type": "boolean",
-                    "example": true
-                }
-            }
-        },
-        "entity.ResponseSuccess": {
-            "type": "object",
-            "properties": {
-                "message": {
-                    "type": "string",
-                    "example": "success"
                 },
                 "success": {
                     "type": "boolean",
@@ -837,7 +755,7 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "mygram-production-2f89.up.railway.app",
+	Host:             "localhost:8080",
 	BasePath:         "/",
 	Schemes:          []string{},
 	Title:            "MyGram API",
