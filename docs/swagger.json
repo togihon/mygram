@@ -14,7 +14,7 @@
         },
         "version": "1.0"
     },
-    "host": "mygram-production-2f89.up.railway.app",
+    "host": "mygram-production-2f89.up.railway.app/",
     "basePath": "/",
     "paths": {
         "/comments": {
@@ -41,9 +41,7 @@
                         }
                     }
                 }
-            }
-        },
-        "/comments/": {
+            },
             "post": {
                 "security": [
                     {

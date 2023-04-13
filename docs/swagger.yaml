@@ -10,7 +10,7 @@ definitions:
         example: true
         type: boolean
     type: object
-host: mygram-production-2f89.up.railway.app
+host: mygram-production-2f89.up.railway.app/
 info:
   contact:
     email: togi.mare@gmail.com
@@ -42,7 +42,6 @@ paths:
       summary: Get all comments
       tags:
       - comments
-  /comments/:
     post:
       description: User can create a comment.
       parameters:
