@@ -37,20 +37,12 @@ import (
 
 func StartServer() *gin.Engine {
 	router := gin.Default()
-
-	config := cors.DefaultConfig()
-	config.AllowOrigins = []string{"*"}
-	config.AllowMethods = []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}
-	config.AllowHeaders = []string{"Authorization", "Content-Type"}
-
-	router.Use(cors.New(config))
+	router.Use(cors.Default())
 
 	userRouter := router.Group("/users")
 	{
 		userRouter.POST("/register", services.MyGramUserRegister)
 		userRouter.POST("/login", services.MyGramUserLogin)
-		userRouter.Use(middleware.Authentication())
-		userRouter.GET("/:id", services.MyGramGetUser)
 	}
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
