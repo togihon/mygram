@@ -69,7 +69,7 @@ func StartServer() *gin.Engine {
 		commentRouter.GET("/", services.MyGramGetAllComment)
 		commentRouter.GET("/:id", services.MyGramGetComment)
 		commentRouter.Use(middleware.Authentication())
-		commentRouter.POST("/:photoID", services.MyGramCreateComment)
+		commentRouter.POST("/", services.MyGramCreateComment)
 		commentRouter.PUT("/:id", middleware.Authorization("comment"), services.MyGramUpdateComment)
 		commentRouter.DELETE("/:id", middleware.Authorization("comment"), services.MyGramDeleteComment)
 	}

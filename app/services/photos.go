@@ -27,7 +27,7 @@ func MyGramGetAllPhoto(c *gin.Context) {
 	User := entity.MyGramUser{}
 
 	ResData := []entity.DataPhoto{}
-	err := db.Find(&Photo).Error
+	err := db.Order("created_at desc").Find(&Photo).Error
 	for _, photo := range Photo {
 		var username string
 		db.Select("username").First(&User, int(photo.MyGramUserID)).Scan(&username)
