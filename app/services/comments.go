@@ -96,7 +96,7 @@ func MyGramGetComment(c *gin.Context) {
 // @Failure 404 {object} entity.Response "If photo id's not found"
 // @Failure 401  {object}  entity.Response "If you are not login or some parameters not filled, error will appear"
 // @Security Bearer
-// @Router /comments/ [POST]
+// @Router /comments [POST]
 func MyGramCreateComment(c *gin.Context) {
 	db, _ := database.Connect()
 	userData := c.MustGet("userData").(jwt.MapClaims)
