@@ -482,6 +482,29 @@ paths:
       summary: Edit a social media
       tags:
       - social-medias
+  /users/{id}:
+    get:
+      description: Getting user daa by id
+      parameters:
+      - description: User's ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Jika email dan password benar, maka akan mendapatkan token
+          schema:
+            $ref: '#/definitions/entity.Response'
+        "401":
+          description: Jika email dan password salah, maka akan muncul error
+          schema:
+            $ref: '#/definitions/entity.ResponseFailed'
+      summary: Get User Data
+      tags:
+      - users
   /users/login:
     post:
       description: Login to system
