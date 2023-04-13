@@ -37,6 +37,12 @@ import (
 
 func StartServer() *gin.Engine {
 	router := gin.Default()
+	config := cors.DefaultConfig()
+	config.AllowOrigins = []string{"*"}
+	config.AllowMethods = []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}
+	config.AllowHeaders = []string{"Authorization", "Content-Type"}
+
+	router.Use(cors.New(config))
 	router.Use(cors.Default())
 
 	userRouter := router.Group("/users")
