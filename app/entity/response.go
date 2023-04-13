@@ -24,6 +24,7 @@ type DataPhoto struct {
 	ID        uint        `json:"id" example:"1"`
 	Title     string      `json:"title"`
 	Caption   string      `json:"caption"`
+	UserID    uint        `json:"id_user" example:"1"`
 	Username  string      `json:"username"`
 	Photo_URL string      `json:"photo_url"`
 	CreatedAt *time.Time  `json:"created_at"`

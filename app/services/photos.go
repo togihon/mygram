@@ -52,6 +52,7 @@ func MyGramGetAllPhoto(c *gin.Context) {
 			ID:        photo.ID,
 			Title:     photo.Title,
 			Caption:   photo.Caption,
+			UserID:    photo.MyGramUserID,
 			Username:  username,
 			Photo_URL: photo.Photo_URL,
 			CreatedAt: photo.CreatedAt,
