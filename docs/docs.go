@@ -724,41 +724,6 @@ const docTemplate = `{
                     }
                 }
             }
-        },
-        "/users/{id}": {
-            "get": {
-                "description": "Getting user daa by id",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "users"
-                ],
-                "summary": "Get User Data",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "User's ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Jika email dan password benar, maka akan mendapatkan token",
-                        "schema": {
-                            "$ref": "#/definitions/entity.Response"
-                        }
-                    },
-                    "401": {
-                        "description": "Jika email dan password salah, maka akan muncul error",
-                        "schema": {
-                            "$ref": "#/definitions/entity.ResponseFailed"
-                        }
-                    }
-                }
-            }
         }
     },
     "definitions": {
