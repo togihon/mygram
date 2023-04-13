@@ -3,6 +3,7 @@ package helpers
 import (
 	"errors"
 	"strings"
+	"time"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
@@ -10,10 +11,12 @@ import (
 
 var secretKey = "mygramapp"
 
-func GenerateToken(id uint, email string) string {
+func GenerateToken(id uint, email, username string, createdAt *time.Time) string {
 	claims := jwt.MapClaims{
-		"id":    id,
-		"email": email,
+		"id":         id,
+		"email":      email,
+		"username":   username,
+		"created_at": createdAt,
 	}
 
 	parseToken := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
