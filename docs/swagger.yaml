@@ -10,7 +10,7 @@ definitions:
         example: true
         type: boolean
     type: object
-host: localhost:8080
+host: mygram-production-2f89.up.railway.app
 info:
   contact:
     email: togi.mare@gmail.com
