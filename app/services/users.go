@@ -5,6 +5,7 @@ import (
 	"mygram/pkg/database"
 	"mygram/pkg/helpers"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -124,5 +125,47 @@ func MyGramUserLogin(c *gin.Context) {
 		Data: struct {
 			Token string "json:\"token\" example:\"eyJhbGciOiJI....\""
 		}{Token: token},
+	})
+}
+
+// MyGramGetUser godoc
+// @Summary Get User Data
+// @Description Getting user daa by id
+// @Tags users
+// @Consumes ({mpfd,json})
+// @Produce json
+// @Param id path int true "User's ID"
+// @Success 200 {object} entity.Response "Jika email dan password benar, maka akan mendapatkan token"
+// @Failure 401  {object}  entity.ResponseFailed "Jika email dan password salah, maka akan muncul error"
+// @Router /users/{id} [GET]
+func MyGramGetUser(c *gin.Context) {
+	db, _ := database.Connect()
+	contentType := helpers.GetContentType(c)
+	User := entity.MyGramUser{}
+
+	//get parameter
+	userID, _ := strconv.Atoi(c.Param("id"))
+
+	if contentType == appJSON {
+		c.ShouldBindJSON(&User)
+	} else {
+		c.ShouldBind(&User)
+	}
+
+	//query select * from users where id = param
+	err := db.First(&User, "id = ?", userID).Error
+
+	if err != nil {
+		c.JSON(http.StatusNotFound, entity.ResponseFailed{
+			Success: false,
+			Message: "User not found",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, entity.Response{
+		Success: true,
+		Message: "User data has been loaded successfully",
+		Data:    User,
 	})
 }

@@ -37,7 +37,7 @@ import (
 
 func StartServer() *gin.Engine {
 	router := gin.Default()
-	
+
 	config := cors.DefaultConfig()
 	config.AllowOrigins = []string{"*"}
 	config.AllowMethods = []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}
@@ -49,6 +49,8 @@ func StartServer() *gin.Engine {
 	{
 		userRouter.POST("/register", services.MyGramUserRegister)
 		userRouter.POST("/login", services.MyGramUserLogin)
+		userRouter.Use(middleware.Authentication())
+		userRouter.GET("/:id", services.MyGramGetUser)
 	}
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
