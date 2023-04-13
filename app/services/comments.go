@@ -18,7 +18,7 @@ import (
 // @Consumes ({mpfd,json})
 // @Produce json
 // @Success 200 {object} entity.Response "Will send all comments"
-// @Failure 404  {object}  entity.ResponseFailed "If there is no comment, error will appear"
+// @Failure 404  {object}  entity.Response "If there is no comment, error will appear"
 // @Router /comments [GET]
 func MyGramGetAllComment(c *gin.Context) {
 	db, _ := database.Connect()
@@ -26,9 +26,10 @@ func MyGramGetAllComment(c *gin.Context) {
 	err := db.Find(&Comment).Error
 
 	if err != nil {
-		c.JSON(http.StatusNotFound, entity.ResponseFailed{
+		c.JSON(http.StatusNotFound, entity.Response{
 			Success: false,
 			Message: "There's no comment found",
+			Data:    nil,
 		})
 		return
 	}
@@ -48,7 +49,7 @@ func MyGramGetAllComment(c *gin.Context) {
 // @Produce json
 // @Param id path int true "comment id"
 // @Success 200 {object} entity.Response "If a comment's id matches with the parameter"
-// @Failure 404  {object}  entity.ResponseFailed "If the comments's id doesn't match with the parameter, error will appear"
+// @Failure 404  {object}  entity.Response "If the comments's id doesn't match with the parameter, error will appear"
 // @Router /comments/{id} [GET]
 func MyGramGetComment(c *gin.Context) {
 	db, _ := database.Connect()
@@ -68,9 +69,10 @@ func MyGramGetComment(c *gin.Context) {
 	err := db.First(&Comment, "id = ?", commentID).Error
 
 	if err != nil {
-		c.JSON(http.StatusNotFound, entity.ResponseFailed{
+		c.JSON(http.StatusNotFound, entity.Response{
 			Success: false,
 			Message: "Comment not found",
+			Data:    nil,
 		})
 		return
 	}
@@ -88,13 +90,13 @@ func MyGramGetComment(c *gin.Context) {
 // @Tags comments
 // @Consumes ({mpfd,json})
 // @Produce json
-// @Param photoID path int true "photo id"
+// @Param photo_id formData int true "photo id"
 // @Param message formData string true "your comment"
 // @Success 201 {object} entity.Response "If all of the parameters filled and you're login"
-// @Failure 404 {object} entity.ResponseFailed "If photo id's not found"
-// @Failure 401  {object}  entity.ResponseFailed "If you are not login or some parameters not filled, error will appear"
+// @Failure 404 {object} entity.Response "If photo id's not found"
+// @Failure 401  {object}  entity.Response "If you are not login or some parameters not filled, error will appear"
 // @Security Bearer
-// @Router /comments/{photoID} [POST]
+// @Router /comments/ [POST]
 func MyGramCreateComment(c *gin.Context) {
 	db, _ := database.Connect()
 	userData := c.MustGet("userData").(jwt.MapClaims)
@@ -102,7 +104,6 @@ func MyGramCreateComment(c *gin.Context) {
 
 	Comment := entity.MyGramComment{}
 	userID := uint(userData["id"].(float64))
-	photoID, _ := strconv.Atoi(c.Param("photoID"))
 
 	if contentType == appJSON {
 		c.ShouldBindJSON(&Comment)
@@ -111,26 +112,13 @@ func MyGramCreateComment(c *gin.Context) {
 	}
 
 	Comment.MyGramUserID = userID
-
-	Photo := entity.MyGramPhoto{}
-	error := db.First(&Photo, "id = ?", photoID).Error
-
-	if error != nil {
-		c.JSON(http.StatusNotFound, entity.ResponseFailed{
-			Success: false,
-			Message: "Photo not found",
-		})
-		return
-	}
-
-	Comment.MyGramPhotoID = uint(photoID)
-
 	err := db.Debug().Create(&Comment).Error
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, entity.ResponseFailed{
+		c.JSON(http.StatusBadRequest, entity.Response{
 			Success: false,
 			Message: err.Error(),
+			Data:    nil,
 		})
 		return
 	}
@@ -151,7 +139,7 @@ func MyGramCreateComment(c *gin.Context) {
 // @Param id path int true "comment id"
 // @Param message formData string true "your comment"
 // @Success 200 {object} entity.Response "If all the parameters are valid"
-// @Failure 404  {object}  entity.ResponseFailed "If there is something wrong, error will appear"
+// @Failure 404  {object}  entity.Response "If there is something wrong, error will appear"
 // @Security Bearer
 // @Router /comments/{id} [PUT]
 func MyGramUpdateComment(c *gin.Context) {
@@ -175,9 +163,10 @@ func MyGramUpdateComment(c *gin.Context) {
 	err := db.Model(&Comment).Where("id = ?", commentID).Updates(entity.MyGramComment{Message: Comment.Message}).Error
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, entity.ResponseFailed{
+		c.JSON(http.StatusBadRequest, entity.Response{
 			Success: false,
 			Message: err.Error(),
+			Data:    nil,
 		})
 		return
 	}
@@ -196,8 +185,8 @@ func MyGramUpdateComment(c *gin.Context) {
 // @Consumes ({mpfd,json})
 // @Produce json
 // @Param id path int true "comment id"
-// @Success 200 {object} entity.ResponseSuccess "If comment is exist and it's your own comment"
-// @Failure 400  {object}  entity.ResponseFailed "If the comment's id is not your own and if the comment doesn't exist, error will appear"
+// @Success 200 {object} entity.Response "If comment is exist and it's your own comment"
+// @Failure 400  {object}  entity.Response "If the comment's id is not your own and if the comment doesn't exist, error will appear"
 // @Security Bearer
 // @Router /comments/{id} [DELETE]
 func MyGramDeleteComment(c *gin.Context) {
@@ -217,15 +206,17 @@ func MyGramDeleteComment(c *gin.Context) {
 	err := db.Where("id = ?", commentID).Delete(&Comment).Error
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, entity.ResponseFailed{
+		c.JSON(http.StatusBadRequest, entity.Response{
 			Success: false,
 			Message: err.Error(),
+			Data:    nil,
 		})
 		return
 	}
 
-	c.JSON(http.StatusOK, entity.ResponseSuccess{
+	c.JSON(http.StatusOK, entity.Response{
 		Success: true,
 		Message: "Comment has been deleted successfully",
+		Data:    nil,
 	})
 }

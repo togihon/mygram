@@ -13,9 +13,10 @@ func Authentication() gin.HandlerFunc {
 		verifyToken, err := helpers.VerifyToken(c)
 
 		if err != nil {
-			c.JSON(http.StatusUnauthorized, entity.ResponseFailed{
+			c.JSON(http.StatusUnauthorized, entity.Response{
 				Success: false,
 				Message: err.Error(),
+				Data:    nil,
 			})
 			return
 		}

@@ -23,8 +23,8 @@ var (
 // @Param username formData string true "User's username"
 // @Param password formData string true "User's password"
 // @Param age formData int true "User's age"
-// @Success 201 {object} entity.ResponseRegister "Jika semua field benar, maka akun akan dibuat "
-// @Failure 400  {object}  entity.ResponseFailed "Jika terdapat kesalahan akan muncul error"
+// @Success 201 {object} entity.Response "If all field filled and correct, account will created "
+// @Failure 400  {object}  entity.Response "If there is an error, data will set to nil"
 // @Router /users/register [post]
 func MyGramUserRegister(c *gin.Context) {
 	db, err := database.Connect()
@@ -34,7 +34,6 @@ func MyGramUserRegister(c *gin.Context) {
 
 	contentType := helpers.GetContentType(c)
 	_, _ = db, contentType
-
 	User := entity.MyGramUser{}
 
 	if contentType == appJSON {
@@ -46,22 +45,23 @@ func MyGramUserRegister(c *gin.Context) {
 	err = db.Debug().Create(&User).Error
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, entity.ResponseFailed{
+		c.JSON(http.StatusBadRequest, entity.Response{
 			Success: false,
 			Message: err.Error(),
+			Data:    nil,
 		})
 		return
 	}
 
-	c.JSON(http.StatusCreated, entity.ResponseRegister{
+	c.JSON(http.StatusCreated, entity.Response{
 		Success: true,
 		Message: "Account has been created successfully",
-		Data: struct {
-			ID    uint   "json:\"id\" example:\"1\""
-			Email string "json:\"email\" example:\"user@mail.com\""
-			Uname string "json:\"username\" example:\"user\""
-			Age   int    "json:\"age\" example:\"18\""
-		}{ID: User.ID, Email: User.Email, Uname: User.Username, Age: int(User.Age)},
+		Data: entity.DataRegister{
+			ID:    User.ID,
+			Email: User.Email,
+			Uname: User.Username,
+			Age:   int(User.Age),
+		},
 	})
 
 }
@@ -74,8 +74,8 @@ func MyGramUserRegister(c *gin.Context) {
 // @Produce json
 // @Param email formData string true "User's email"
 // @Param password formData string true "User's password"
-// @Success 200 {object} entity.ResponseLogin "Jika email dan password benar, maka akan mendapatkan token"
-// @Failure 401  {object}  entity.ResponseFailed "Jika email dan password salah, maka akan muncul error"
+// @Success 200 {object} entity.Response "If email and password are correct, you will get a token"
+// @Failure 401  {object}  entity.Response "If email and password are not correct, data will set to nil"
 // @Router /users/login [post]
 func MyGramUserLogin(c *gin.Context) {
 	db, _ := database.Connect()
@@ -92,16 +92,16 @@ func MyGramUserLogin(c *gin.Context) {
 	}
 
 	password = User.Password
-
 	//select data user berdasarkan email
 	err := db.Debug().Where("email = ?", User.Email).Take(&User).Error
 
 	if err != nil {
 
 		c.JSON(http.StatusUnauthorized,
-			entity.ResponseFailed{
+			entity.Response{
 				Success: false,
 				Message: "Invalid email or password",
+				Data:    nil,
 			})
 		return
 	}
@@ -109,20 +109,21 @@ func MyGramUserLogin(c *gin.Context) {
 	comparePass := helpers.ComparePass([]byte(User.Password), []byte(password))
 
 	if !comparePass {
-		c.JSON(http.StatusUnauthorized, entity.ResponseFailed{
+		c.JSON(http.StatusUnauthorized, entity.Response{
 			Success: false,
 			Message: "Invalid email or password",
+			Data:    nil,
 		})
 		return
 	}
 
 	token := helpers.GenerateToken(User.ID, User.Email, User.Username, User.CreatedAt)
 
-	c.JSON(http.StatusOK, entity.ResponseLogin{
+	c.JSON(http.StatusOK, entity.Response{
 		Success: true,
 		Message: "User logged in successfully",
-		Data: struct {
-			Token string "json:\"token\" example:\"eyJhbGciOiJI....\""
-		}{Token: token},
+		Data: entity.DataLogin{
+			Token: token,
+		},
 	})
 }

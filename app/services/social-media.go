@@ -18,7 +18,7 @@ import (
 // @Consumes ({mpfd,json})
 // @Produce json
 // @Success 200 {object} entity.Response "Will send all social media datas"
-// @Failure 404  {object}  entity.ResponseFailed "If there is no social media, error will appear"
+// @Failure 404  {object}  entity.Response "If there is no social media, error will appear"
 // @Router /social-media [GET]
 func MyGramGetAllSocialMedia(c *gin.Context) {
 	db, _ := database.Connect()
@@ -26,9 +26,10 @@ func MyGramGetAllSocialMedia(c *gin.Context) {
 	err := db.Find(&SocialMedia).Error
 
 	if err != nil {
-		c.JSON(http.StatusNotFound, entity.ResponseFailed{
+		c.JSON(http.StatusNotFound, entity.Response{
 			Success: false,
 			Message: "There's no SocialMedia found",
+			Data:    nil,
 		})
 		return
 	}
@@ -48,7 +49,7 @@ func MyGramGetAllSocialMedia(c *gin.Context) {
 // @Produce json
 // @Param id path int true "social media id"
 // @Success 200 {object} entity.Response "If a social media's id matches with the parameter"
-// @Failure 404  {object}  entity.ResponseFailed "If the social media's id doesn't match with the parameter, error will appear"
+// @Failure 404  {object}  entity.Response "If the social media's id doesn't match with the parameter, error will appear"
 // @Router /social-media/{id} [GET]
 func MyGramGetSocialMedia(c *gin.Context) {
 	db, _ := database.Connect()
@@ -68,9 +69,10 @@ func MyGramGetSocialMedia(c *gin.Context) {
 	err := db.First(&SocialMedia, "id = ?", socialMediaID).Error
 
 	if err != nil {
-		c.JSON(http.StatusNotFound, entity.ResponseFailed{
+		c.JSON(http.StatusNotFound, entity.Response{
 			Success: false,
 			Message: "Social media not found",
+			Data:    nil,
 		})
 		return
 	}
@@ -91,7 +93,7 @@ func MyGramGetSocialMedia(c *gin.Context) {
 // @Param name formData string true "social media name"
 // @Param social_media_url formData string true "social media url"
 // @Success 201 {object} entity.Response "If all of the parameters filled and you are logged in"
-// @Failure 401  {object}  entity.ResponseFailed "If you are not login or some parameters not filled, error will appear"
+// @Failure 401  {object}  entity.Response "If you are not login or some parameters not filled, error will appear"
 // @Security Bearer
 // @Router /social-media [POST]
 func MyGramCreateSocialMedia(c *gin.Context) {
@@ -112,9 +114,10 @@ func MyGramCreateSocialMedia(c *gin.Context) {
 	err := db.Debug().Create(&SocialMedia).Error
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, entity.ResponseFailed{
+		c.JSON(http.StatusBadRequest, entity.Response{
 			Success: false,
 			Message: err.Error(),
+			Data:    nil,
 		})
 		return
 	}
@@ -136,7 +139,7 @@ func MyGramCreateSocialMedia(c *gin.Context) {
 // @Param name formData string true "social media name"
 // @Param social_media_url formData string true "social media url"
 // @Success 200 {object} entity.Response "If all the parameters are valid"
-// @Failure 400  {object}  entity.ResponseFailed "If there is something wrong, error will appear"
+// @Failure 400  {object}  entity.Response "If there is something wrong, error will appear"
 // @Security Bearer
 // @Router /social-media/{id} [PUT]
 func MyGramUpdateSocialMedia(c *gin.Context) {
@@ -160,9 +163,10 @@ func MyGramUpdateSocialMedia(c *gin.Context) {
 	err := db.Model(&SocialMedia).Where("id = ?", socialMediaID).Updates(entity.MyGramSocialMedia{Name: SocialMedia.Name, SocialMediaURL: SocialMedia.SocialMediaURL}).Error
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, entity.ResponseFailed{
+		c.JSON(http.StatusBadRequest, entity.Response{
 			Success: false,
 			Message: err.Error(),
+			Data:    nil,
 		})
 		return
 	}
@@ -181,8 +185,8 @@ func MyGramUpdateSocialMedia(c *gin.Context) {
 // @Consumes ({mpfd,json})
 // @Produce json
 // @Param id path int true "social media id"
-// @Success 200 {object} entity.ResponseSuccess "If social media is exist and it's your own social media"
-// @Failure 400  {object}  entity.ResponseFailed "If social media's id is not your own or if the comment doesn't exist, error will appear"
+// @Success 200 {object} entity.Response "If social media is exist and it's your own social media"
+// @Failure 400  {object}  entity.Response "If social media's id is not your own or if the comment doesn't exist, error will appear"
 // @Security Bearer
 // @Router /social-media/{id} [DELETE]
 func MyGramDeleteSocialMedia(c *gin.Context) {
@@ -202,15 +206,17 @@ func MyGramDeleteSocialMedia(c *gin.Context) {
 	err := db.Where("id = ?", socialMediaID).Delete(&SocialMedia).Error
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, entity.ResponseFailed{
+		c.JSON(http.StatusBadRequest, entity.Response{
 			Success: false,
 			Message: err.Error(),
+			Data:    nil,
 		})
 		return
 	}
 
-	c.JSON(http.StatusOK, entity.ResponseSuccess{
+	c.JSON(http.StatusOK, entity.Response{
 		Success: true,
 		Message: "Sosial media berhasil dihapus",
+		Data:    nil,
 	})
 }

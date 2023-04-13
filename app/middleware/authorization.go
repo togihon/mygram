@@ -15,9 +15,10 @@ func Authorization(endpoint string) gin.HandlerFunc {
 		db, _ := database.Connect()
 		param, err := strconv.Atoi(c.Param("id"))
 		if err != nil {
-			c.AbortWithStatusJSON(http.StatusBadRequest, entity.ResponseFailed{
+			c.AbortWithStatusJSON(http.StatusBadRequest, entity.Response{
 				Success: false,
 				Message: "Invalid parameter",
+				Data:    nil,
 			})
 			return
 		}
@@ -30,17 +31,19 @@ func Authorization(endpoint string) gin.HandlerFunc {
 			err := db.Select("my_gram_user_id").First(&Entity, uint(param)).Error
 
 			if err != nil {
-				c.AbortWithStatusJSON(http.StatusNotFound, entity.ResponseFailed{
+				c.AbortWithStatusJSON(http.StatusNotFound, entity.Response{
 					Success: false,
 					Message: "Invalid parameter",
+					Data:    nil,
 				})
 				return
 			}
 
 			if Entity.MyGramUserID != userID {
-				c.AbortWithStatusJSON(http.StatusUnauthorized, entity.ResponseFailed{
+				c.AbortWithStatusJSON(http.StatusUnauthorized, entity.Response{
 					Success: false,
 					Message: "You are not allowed to access this data",
+					Data:    nil,
 				})
 			}
 		case "comment":
@@ -48,17 +51,19 @@ func Authorization(endpoint string) gin.HandlerFunc {
 			err := db.Select("my_gram_user_id").First(&Entity, uint(param)).Error
 
 			if err != nil {
-				c.AbortWithStatusJSON(http.StatusNotFound, entity.ResponseFailed{
+				c.AbortWithStatusJSON(http.StatusNotFound, entity.Response{
 					Success: false,
 					Message: "Data not found or exist",
+					Data:    nil,
 				})
 				return
 			}
 
 			if Entity.MyGramUserID != userID {
-				c.AbortWithStatusJSON(http.StatusUnauthorized, entity.ResponseFailed{
+				c.AbortWithStatusJSON(http.StatusUnauthorized, entity.Response{
 					Success: false,
 					Message: "You are not allowed to access this data",
+					Data:    nil,
 				})
 			}
 		case "socialMedia":
@@ -66,17 +71,19 @@ func Authorization(endpoint string) gin.HandlerFunc {
 			err := db.Select("my_gram_user_id").First(&Entity, uint(param)).Error
 
 			if err != nil {
-				c.AbortWithStatusJSON(http.StatusNotFound, entity.ResponseFailed{
+				c.AbortWithStatusJSON(http.StatusNotFound, entity.Response{
 					Success: false,
 					Message: "Data not found or exist",
+					Data:    nil,
 				})
 				return
 			}
 
 			if Entity.MyGramUserID != userID {
-				c.AbortWithStatusJSON(http.StatusUnauthorized, entity.ResponseFailed{
+				c.AbortWithStatusJSON(http.StatusUnauthorized, entity.Response{
 					Success: false,
 					Message: "You are not allowed to access this data",
+					Data:    nil,
 				})
 			}
 		default:

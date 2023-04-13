@@ -9,7 +9,7 @@ import (
 type MyGramComment struct {
 	MyGramID
 	MyGramUserID  uint   `json:"user_id" example:"2"`
-	MyGramPhotoID uint   `json:"photo_id" example:"3"`
+	MyGramPhotoID uint   `json:"photo_id" form:"photo_id" example:"3"`
 	Message       string `gorm:"not null" json:"message" form:"message" valid:"required~Comment is required"`
 	MyGramDate
 }
