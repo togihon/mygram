@@ -23,7 +23,7 @@ import (
 func MyGramGetAllComment(c *gin.Context) {
 	db, _ := database.Connect()
 	Comment := []entity.MyGramComment{}
-	err := db.Order("created_at desc").Find(&Comment).Error
+	err := db.Find(&Comment).Error
 
 	if err != nil {
 		c.JSON(http.StatusNotFound, entity.Response{
