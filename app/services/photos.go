@@ -34,7 +34,7 @@ func MyGramGetAllPhoto(c *gin.Context) {
 
 		Comment := []entity.MyGramComment{}
 		ResComment := []entity.DataComment{}
-		db.Order("created_at desc").Find(&Comment, "my_gram_photo_id", int(photo.ID))
+		db.Find(&Comment, "my_gram_photo_id", int(photo.ID))
 		for _, comment := range Comment {
 			var uname string
 			db.Select("username").First(&User, int(comment.MyGramUserID)).Scan(&uname)
